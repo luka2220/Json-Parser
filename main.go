@@ -15,6 +15,22 @@ import (
 // - A key can only be a string
 // - JSON data types consist of => string, number, null, boolean, object, array
 
+type Tokens struct {
+	openBracket  string
+	closeBracket string
+	sperator     string
+	string       string
+}
+
+func getTokens() *Tokens {
+	return &Tokens{
+		"{",
+		"}",
+		":",
+		"\"",
+	}
+}
+
 func main() {
 	reader := bufio.NewReader(os.Stdin)
 
@@ -39,12 +55,29 @@ func main() {
 	log.Printf("Length of file = %d", fileInfo.Size())
 
 	fileContentBytes := make([]byte, fileInfo.Size())
-	bytesRead, err := file.Read(fileContentBytes)
+	_, err = file.Read(fileContentBytes)
 	if err != nil {
 		log.Fatalf("Error reading the files contents: %v\n", err)
 	}
 
-	fileContentText := string(fileContentBytes[:])
+	lexeme := make([]string, fileInfo.Size())
 
-	log.Printf("Read %d bytes. File contents = %v", bytesRead, fileContentText)
+	for i := range fileContentBytes {
+		char := string(fileContentBytes[i])
+		tokens := getTokens()
+
+		switch char {
+		case tokens.openBracket:
+			lexeme = append(lexeme, tokens.openBracket)
+		case tokens.string:
+			lexeme = append(lexeme, tokens.string)
+		case tokens.sperator:
+			lexeme = append(lexeme, tokens.sperator)
+		case tokens.closeBracket:
+			lexeme = append(lexeme, tokens.closeBracket)
+		}
+	}
+
+	log.Printf("Test lexeme = %v", lexeme)
+	log.Printf("lexeme capacity = %d\nlexeme length = %d", cap(lexeme), len(lexeme))
 }
