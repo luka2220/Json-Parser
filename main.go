@@ -20,6 +20,7 @@ type Tokens struct {
 	closeBracket string
 	sperator     string
 	string       string
+	comma        string
 }
 
 func getTokens() *Tokens {
@@ -28,6 +29,43 @@ func getTokens() *Tokens {
 		"}",
 		":",
 		"\"",
+		",",
+	}
+}
+
+func generateLexeme(fileContent []byte) []string {
+	var lexeme []string
+	tokens := getTokens()
+
+	for i := range fileContent {
+		jsonChar := string(fileContent[i])
+
+		switch jsonChar {
+		case tokens.openBracket:
+			lexeme = append(lexeme, tokens.openBracket)
+		// handle string token with characters inside
+		case tokens.string:
+			lexeme = append(lexeme, tokens.string)
+		case tokens.sperator:
+			lexeme = append(lexeme, tokens.sperator)
+		case tokens.comma:
+			lexeme = append(lexeme, tokens.comma)
+		case tokens.closeBracket:
+			lexeme = append(lexeme, tokens.closeBracket)
+		}
+	}
+
+	return lexeme
+}
+
+// NOTE:
+// Params: lexeme []string => lexme to be tested
+// Returns: void
+// Operation: dislpays the passed in lexeme for debugging, will not throw an error for invalid lexemes
+func testLexeme(lexeme []string) {
+	for i := range lexeme {
+		cToken := lexeme[i]
+		fmt.Printf("%s ", cToken)
 	}
 }
 
@@ -60,24 +98,8 @@ func main() {
 		log.Fatalf("Error reading the files contents: %v\n", err)
 	}
 
-	lexeme := make([]string, fileInfo.Size())
-
-	for i := range fileContentBytes {
-		char := string(fileContentBytes[i])
-		tokens := getTokens()
-
-		switch char {
-		case tokens.openBracket:
-			lexeme = append(lexeme, tokens.openBracket)
-		case tokens.string:
-			lexeme = append(lexeme, tokens.string)
-		case tokens.sperator:
-			lexeme = append(lexeme, tokens.sperator)
-		case tokens.closeBracket:
-			lexeme = append(lexeme, tokens.closeBracket)
-		}
-	}
-
-	log.Printf("Test lexeme = %v", lexeme)
+	lexeme := generateLexeme(fileContentBytes)
 	log.Printf("lexeme capacity = %d\nlexeme length = %d", cap(lexeme), len(lexeme))
+
+	testLexeme(lexeme)
 }
