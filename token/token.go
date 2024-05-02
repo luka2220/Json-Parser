@@ -13,10 +13,12 @@ type Token struct {
 }
 
 // NOTE:
-// Below are all valid lexer tokens for JSON
+// All valid JSON lexer tokens
 const (
 	ILLEGAL = "ILLEGAL" // signifies and unknown or illegal token
 	EOF     = "EOF"     // signifies end of file, which lets the parser know to stop
+
+	IDENT = "IDENT" // identifiers: "foo", "name", "age"
 
 	// Operator
 	ASSIGN = ":"
@@ -28,7 +30,7 @@ const (
 	LSQBRACE = "["
 	RSQBRACE = "]"
 
-	// Types
+	// Data Types
 	STRING = "STRING"
 	NUMBER = "NUMBER"
 	OBJECT = "OBJECT"

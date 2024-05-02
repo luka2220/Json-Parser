@@ -30,7 +30,7 @@ func New(input string) *Lexer {
 }
 
 // NOTE:
-// Generates the next character and advances the position in the input field
+// Generates the next character in the input and advances the position in the input field
 func (l *Lexer) readChar() {
 	if l.readPosition >= len(l.input) {
 		l.ch = 0
@@ -48,6 +48,8 @@ func (l *Lexer) readChar() {
 func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 
+	l.skipWhiteSpace()
+
 	switch l.ch {
 	case ':':
 		tok = newToken(token.ASSIGN, l.ch)
@@ -64,11 +66,48 @@ func (l *Lexer) NextToken() token.Token {
 	case 0:
 		tok.Literal = ""
 		tok.Type = token.EOF
+	default:
+		if isLetter(l.ch) {
+			tok.Literal = l.readIdentifier()
+			tok.Type = token.IDENT
+			return tok
+		} else {
+			tok = newToken(token.ILLEGAL, l.ch)
+		}
 	}
 
 	l.readChar()
 
 	return tok
+}
+
+// NOTE:
+// Helper function to skip whitespaces, tabs, newline, and returns
+// Addvances to the next char in the input while any are found
+func (l *Lexer) skipWhiteSpace() {
+	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
+		l.readChar()
+	}
+}
+
+// NOTE:
+// Reads the identifier and advances the lexers position until it encounters a non-letter char
+// Returns: string
+func (l *Lexer) readIdentifier() string {
+	position := l.position
+	for isLetter(l.ch) {
+		l.readChar()
+	}
+
+	return l.input[position:l.position]
+}
+
+// NOTE:
+// Helper function for Lexer.NextToken() to determine if the current character is a letter
+// Params: ch (:byte)
+// Returns: bool
+func isLetter(ch byte) bool {
+	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
 }
 
 // NOTE:

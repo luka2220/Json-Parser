@@ -8,3 +8,6 @@ tidy:
 
 parse: 
 	go run main.go
+
+test next-token:
+	go test -v ./lexer/
