@@ -63,12 +63,18 @@ func (l *Lexer) NextToken() token.Token {
 		tok = newToken(token.LSQBRACE, l.ch)
 	case ']':
 		tok = newToken(token.RSQBRACE, l.ch)
+	case '"':
+		tok = newToken(token.STRING, l.ch)
 	case 0:
 		tok.Literal = ""
 		tok.Type = token.EOF
 	default:
 		if isLetter(l.ch) {
 			tok.Literal = l.readIdentifier()
+			tok.Type = token.IDENT
+			return tok
+		} else if isDigit(l.ch) {
+			tok.Literal = l.readDigit()
 			tok.Type = token.IDENT
 			return tok
 		} else {
@@ -91,7 +97,7 @@ func (l *Lexer) skipWhiteSpace() {
 }
 
 // NOTE:
-// Reads the identifier and advances the lexers position until it encounters a non-letter char
+// Reads the identifier string and advances the lexers position until it encounters a non-letter byte
 // Returns: string
 func (l *Lexer) readIdentifier() string {
 	position := l.position
@@ -103,11 +109,31 @@ func (l *Lexer) readIdentifier() string {
 }
 
 // NOTE:
-// Helper function for Lexer.NextToken() to determine if the current character is a letter
+// Reads the identifier digit and advances the lexers position until it encounters a non-digit byte
+// Returns: string
+func (l *Lexer) readDigit() string {
+	position := l.position
+	for isDigit(l.ch) {
+		l.readChar()
+	}
+
+	return l.input[position:l.position]
+}
+
+// NOTE:
+// Helper function to determine if the current character is a letter or number which are valid in strings
 // Params: ch (:byte)
 // Returns: bool
 func isLetter(ch byte) bool {
-	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
+	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_' || isDigit(ch)
+}
+
+// NOTE:
+// Helper function to determine if the current character is a number
+// Patams: ch (:byte)
+// Returns: bool
+func isDigit(ch byte) bool {
+	return '0' <= ch && ch <= '9'
 }
 
 // NOTE:

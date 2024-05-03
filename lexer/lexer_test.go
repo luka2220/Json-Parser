@@ -28,13 +28,21 @@ func TestNextToken(t *testing.T) {
 		expectedLiteral string
 	}{
 		{token.LBRACE, "{"},
+		{token.STRING, "\""},
 		{token.IDENT, "key"},
+		{token.STRING, "\""},
 		{token.ASSIGN, ":"},
+		{token.STRING, "\""},
 		{token.IDENT, "value"},
+		{token.STRING, "\""},
 		{token.COMMA, ","},
+		{token.STRING, "\""},
 		{token.IDENT, "key2"},
+		{token.STRING, "\""},
 		{token.ASSIGN, ":"},
+		{token.STRING, "\""},
 		{token.IDENT, "value"},
+		{token.STRING, "\""},
 		{token.RBRACE, "}"},
 	}
 
