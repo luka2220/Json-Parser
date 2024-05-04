@@ -31,11 +31,10 @@ const (
 	RSQBRACE = "]"
 
 	// Data Types
-	STRING = "STRING"
-	NUMBER = "NUMBER"
-	OBJECT = "OBJECT"
-	ARRAY  = "ARRAY"
-	TRUE   = "TRUE"
-	FALSE  = "FALSE"
-	NULL   = "NULL"
+	STRING  = "STRING"
+	NUMBER  = "NUMBER"
+	OBJECT  = "OBJECT"
+	ARRAY   = "ARRAY"
+	BOOLEAN = "BOOLEAN"
+	NULL    = "NULL"
 )

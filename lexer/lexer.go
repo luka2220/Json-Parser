@@ -41,6 +41,10 @@ func (l *Lexer) readChar() {
 	l.readPosition += 1
 }
 
+// TODO:
+// Find a way to read JSON string with numbers and letters as identifiers
+// Create tokens based off of all the valid JSON data types
+
 // NOTE:
 // Creates a token based on the current character under examination, and advances
 // the position in the input.
@@ -64,6 +68,10 @@ func (l *Lexer) NextToken() token.Token {
 	case ']':
 		tok = newToken(token.RSQBRACE, l.ch)
 	case '"':
+		// TODO:
+		// Fix string tokenization
+		// Read an entire string until the next "
+		// Allow numbers letters
 		tok = newToken(token.STRING, l.ch)
 	case 0:
 		tok.Literal = ""
