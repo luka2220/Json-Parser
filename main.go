@@ -35,5 +35,21 @@ func main() {
 		log.Fatalf("Error reading the files contents: %v\n", err)
 	}
 
-	fmt.Printf("File info:\nsize=%dbytes\nname=%s\ncontent(ascii)=%v", fileInfo.Size(), fileInfo.Name(), fileContentBytes)
+	fileStr := bytesToStr(fileContentBytes)
+
+	fmt.Printf("File info:\nsize=%dbytes\nname=%s\ncontent(bytes)=%v\ncontent(string)=%s", fileInfo.Size(), fileInfo.Name(), fileContentBytes, fileStr)
+}
+
+// NOTE:
+// Helper function to convert file from bytes into a string
+// Params: f (:[]byte)
+// Returns: string
+func bytesToStr(f []byte) string {
+	var s string
+
+	for i := range f {
+		s += string(f[i])
+	}
+
+	return s
 }

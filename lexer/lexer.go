@@ -138,11 +138,16 @@ func isLetter(ch byte) bool {
 
 // NOTE:
 // Helper function to determine if the current character is a number
-// Patams: ch (:byte)
+// Params: ch (:byte)
 // Returns: bool
 func isDigit(ch byte) bool {
 	return '0' <= ch && ch <= '9'
 }
+
+// NOTE:
+// Helper function to determine if the current character is a boolean type
+// Params: ch (:byte)
+// returns: bool
 
 // NOTE:
 // Helper function used to create tokens
