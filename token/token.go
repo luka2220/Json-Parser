@@ -35,6 +35,26 @@ const (
 	NUMBER  = "NUMBER"
 	OBJECT  = "OBJECT"
 	ARRAY   = "ARRAY"
-	BOOLEAN = "BOOLEAN"
 	NULL    = "NULL"
+	BOOLEAN = "BOOLEAN"
 )
+
+// NOTE:
+// Map of string (key), TokenType (value) to represent keyword data types
+var keywords = map[string]TokenType{
+	"true":  BOOLEAN,
+	"false": BOOLEAN,
+	"null":  NULL,
+}
+
+// NOTE:
+// Checks the keywords table to see if an identifier is a keyword or not
+// Params: ident (:string)
+// Returns: TokenType
+func LookupIdent(ident string) TokenType {
+	if tok, ok := keywords[ident]; ok {
+		return tok
+	}
+
+	return IDENT
+}

@@ -72,18 +72,19 @@ func (l *Lexer) NextToken() token.Token {
 		// Fix string tokenization
 		// Read an entire string until the next "
 		// Allow numbers letters
+		// Create string token based on identifier or string value?
 		tok = newToken(token.STRING, l.ch)
 	case 0:
 		tok.Literal = ""
 		tok.Type = token.EOF
 	default:
-		if isLetter(l.ch) {
-			tok.Literal = l.readIdentifier()
-			tok.Type = token.IDENT
-			return tok
-		} else if isDigit(l.ch) {
+		if isDigit(l.ch) {
 			tok.Literal = l.readDigit()
-			tok.Type = token.IDENT
+			tok.Type = token.NUMBER
+			return tok
+		} else if isLetter(l.ch) {
+			tok.Literal = l.readIdentifier()
+			tok.Type = token.LookupIdent(tok.Literal)
 			return tok
 		} else {
 			tok = newToken(token.ILLEGAL, l.ch)
@@ -148,6 +149,8 @@ func isDigit(ch byte) bool {
 // Helper function to determine if the current character is a boolean type
 // Params: ch (:byte)
 // returns: bool
+// func isBoolean(ch byte) bool {
+// }
 
 // NOTE:
 // Helper function used to create tokens
