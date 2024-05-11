@@ -41,10 +41,6 @@ func (l *Lexer) readChar() {
 	l.readPosition += 1
 }
 
-// TODO:
-// Find a way to read JSON string with numbers and letters as identifiers
-// Create tokens based off of all the valid JSON data types
-
 // NOTE:
 // Creates a token based on the current character under examination, and advances
 // the position in the input.
@@ -68,12 +64,9 @@ func (l *Lexer) NextToken() token.Token {
 	case ']':
 		tok = newToken(token.RSQBRACE, l.ch)
 	case '"':
-		// TODO:
-		// Fix string tokenization
-		// Read an entire string until the next "
-		// Allow numbers letters
-		// Create string token based on identifier or string value?
 		tok = newToken(token.STRING, l.ch)
+		tok.Literal = l.readString()
+		return tok
 	case 0:
 		tok.Literal = ""
 		tok.Type = token.EOF
@@ -97,12 +90,28 @@ func (l *Lexer) NextToken() token.Token {
 }
 
 // NOTE:
-// Helper function to skip whitespaces, tabs, newline, and returns
+// Advances position in the lexer when encountering whitespaces, tabs, newline, and returns
 // Addvances to the next char in the input while any are found
 func (l *Lexer) skipWhiteSpace() {
 	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
 		l.readChar()
 	}
+}
+
+// NOTE:
+// Read a string value until the a closing double quote or EOF
+// Returns: string
+func (l *Lexer) readString() string {
+	position := l.position + 1
+
+	for {
+		l.readChar()
+		if l.ch == '"' || l.ch == 0 {
+			break
+		}
+	}
+
+	return l.input[position:l.position]
 }
 
 // NOTE:
@@ -144,13 +153,6 @@ func isLetter(ch byte) bool {
 func isDigit(ch byte) bool {
 	return '0' <= ch && ch <= '9'
 }
-
-// NOTE:
-// Helper function to determine if the current character is a boolean type
-// Params: ch (:byte)
-// returns: bool
-// func isBoolean(ch byte) bool {
-// }
 
 // NOTE:
 // Helper function used to create tokens
