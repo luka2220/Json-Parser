@@ -65,17 +65,18 @@ func (l *Lexer) NextToken() token.Token {
 		tok = newToken(token.RSQBRACE, l.ch)
 	case '"':
 		tok = newToken(token.STRING, l.ch)
+		tok.Literal = l.readString()
 	case 0:
 		tok.Literal = ""
 		tok.Type = token.EOF
 	default:
 		if isLetter(l.ch) {
 			tok.Literal = l.readIdentifier()
-			tok.Type = token.IDENT
+			tok.Type = token.LookupIdent(tok.Literal)
 			return tok
 		} else if isDigit(l.ch) {
 			tok.Literal = l.readDigit()
-			tok.Type = token.IDENT
+			tok.Type = token.NUMBER
 			return tok
 		} else {
 			tok = newToken(token.ILLEGAL, l.ch)
@@ -88,12 +89,28 @@ func (l *Lexer) NextToken() token.Token {
 }
 
 // NOTE:
-// Helper function to skip whitespaces, tabs, newline, and returns
+// Advances position in the lexer when encountering whitespaces, tabs, newline, and returns
 // Addvances to the next char in the input while any are found
 func (l *Lexer) skipWhiteSpace() {
 	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
 		l.readChar()
 	}
+}
+
+// NOTE:
+// Read a string value until the a closing double quote or EOF
+// Returns: string
+func (l *Lexer) readString() string {
+	position := l.position + 1
+
+	for {
+		l.readChar()
+		if l.ch == '"' || l.ch == 0 {
+			break
+		}
+	}
+
+	return l.input[position:l.position]
 }
 
 // NOTE:
@@ -125,12 +142,12 @@ func (l *Lexer) readDigit() string {
 // Params: ch (:byte)
 // Returns: bool
 func isLetter(ch byte) bool {
-	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_' || isDigit(ch)
+	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
 }
 
 // NOTE:
 // Helper function to determine if the current character is a number
-// Patams: ch (:byte)
+// Params: ch (:byte)
 // Returns: bool
 func isDigit(ch byte) bool {
 	return '0' <= ch && ch <= '9'
