@@ -18,8 +18,6 @@ const (
 	ILLEGAL = "ILLEGAL" // signifies and unknown or illegal token
 	EOF     = "EOF"     // signifies end of file, which lets the parser know to stop
 
-	IDENT = "IDENT" // identifiers: "foo", "name", "age"
-
 	// Operator
 	ASSIGN = ":"
 
@@ -30,20 +28,21 @@ const (
 	LSQBRACE = "["
 	RSQBRACE = "]"
 
-	// Data Types
-	STRING  = "STRING"
-	NUMBER  = "NUMBER"
-	OBJECT  = "OBJECT"
-	ARRAY   = "ARRAY"
-	NULL    = "NULL"
-	BOOLEAN = "BOOLEAN"
+	// Literals
+	STRING = "STRING"
+	NUMBER = "NUMBER"
+
+	// Values
+	NULL  = "NULL"
+	TRUE  = "TRUE"
+	FALSE = "FALSE"
 )
 
 // NOTE:
 // Map of string (key), TokenType (value) to represent keyword data types
 var keywords = map[string]TokenType{
-	"true":  BOOLEAN,
-	"false": BOOLEAN,
+	"true":  TRUE,
+	"false": FALSE,
 	"null":  NULL,
 }
 
@@ -56,5 +55,5 @@ func LookupIdent(ident string) TokenType {
 		return tok
 	}
 
-	return IDENT
+	return ILLEGAL
 }
