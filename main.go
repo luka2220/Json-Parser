@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path"
 	"strings"
 )
 
@@ -29,6 +30,11 @@ func main() {
 		log.Fatalf("Error getting file info: %v\n", err)
 	}
 
+	if !isJSON(fileInfo.Name()) {
+		log.Printf("Enter a json file")
+		os.Exit(400)
+	}
+
 	fileContentBytes := make([]byte, fileInfo.Size())
 	_, err = file.Read(fileContentBytes)
 	if err != nil {
@@ -41,7 +47,7 @@ func main() {
 }
 
 // NOTE:
-// Helper function to convert file from bytes into a string
+// Convert file from bytes into a string
 // Params: f (:[]byte)
 // Returns: string
 func bytesToStr(f []byte) string {
@@ -52,4 +58,12 @@ func bytesToStr(f []byte) string {
 	}
 
 	return s
+}
+
+// NOTE:
+// Check if a file type is json or not
+// Params: fname (:string)
+// Returns: bool
+func isJSON(fname string) bool {
+	return path.Ext(fname) == ".json"
 }
