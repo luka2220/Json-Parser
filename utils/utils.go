@@ -1,23 +1,17 @@
 package utils
 
 import (
-	"bufio"
 	"fmt"
 	"log"
 	"os"
-	"strings"
+
+	"github.com/luka2220/json-parser/lexer"
+	"github.com/luka2220/json-parser/token"
 )
 
 // NOTE:
 // Runs the json file tokenizer
-func ExecuteTokenizer() {
-	reader := bufio.NewReader(os.Stdin)
-
-	fmt.Println("Enter a JSON file path")
-	in, _ := reader.ReadString('\n')
-
-	filePath := strings.Trim(in, "\n")
-
+func ExecuteTokenizer(filePath string) {
 	file, err := os.Open(filePath)
 	if err != nil {
 		log.Printf("Error opening file. Ensure correct path in passed: %v\n", err)
@@ -38,9 +32,19 @@ func ExecuteTokenizer() {
 	}
 
 	fileStr := bytesToStr(fileContentBytes)
+	lexer := lexer.New(fileStr)
 
-	fmt.Printf("File info:\nsize=%dbytes\nname=%s\ncontent(bytes)=%v\ncontent(string)=%s",
-		fileInfo.Size(), fileInfo.Name(), fileContentBytes, fileStr)
+	for {
+		tok := lexer.NextToken()
+		out := fmt.Sprintf("> Token: %v > Literal: %v", tok.Type, tok.Literal)
+
+		if tok.Type == token.EOF {
+			fmt.Println(out)
+			break
+		}
+		out = fmt.Sprintf("> Token: %v > Literal: %v", tok.Type, tok.Literal)
+		fmt.Println(out)
+	}
 }
 
 // NOTE:

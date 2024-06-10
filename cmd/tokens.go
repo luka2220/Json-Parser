@@ -1,6 +1,3 @@
-/*
-Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -10,16 +7,15 @@ import (
 
 // tokensCmd represents the tokens command
 var tokensCmd = &cobra.Command{
-	Use:   "tokens",
+	Use:   "tokens [FILE]",
 	Short: "Displays the tokens for the JSON file passed.",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Long: `Pass in a path to a JSON file. Must be a valid path 
+to a JSON file for the tokenizer to run. The tokenizer will not 
+indicate if the JSON fileis valid or not, you can inspect the
+tokens to view if any of the are invalid.`,
+	Args: cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.ExecuteTokenizer()
+		utils.ExecuteTokenizer(args[0])
 	},
 }
 
